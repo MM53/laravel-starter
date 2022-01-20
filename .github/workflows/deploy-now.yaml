@@ -34,7 +34,7 @@ jobs:
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
         uses: ./.github/actions/deploy-now-configuration-template-action
         env:
-          data.app-url: ${{ steps.project.outputs.site-url }}
+          data.appUrl: ${{ steps.project.outputs.site-url }}
 #      - name: Make envfile
 #        if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
 #        uses: fmunirdev/envvar-to-dotenv-action@v0.2.0
