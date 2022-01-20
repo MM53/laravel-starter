@@ -43,7 +43,7 @@ func loadTemplateFiles() []ConfigurationTemplate {
 		subPaths := strings.Split(file, "/")
 		filename := subPaths[len(subPaths)-1]
 		var fileInfo syscall.Stat_t
-		handleError(syscall.Stat(file, &fileInfo))
+		handleError(syscall.Stat(templateDir+"/"+file, &fileInfo))
 		templates = append(templates, ConfigurationTemplate{
 			Path:     joinPath(subPaths[:len(subPaths)-1]...),
 			Filename: filename,
