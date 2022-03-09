@@ -56,7 +56,7 @@ jobs:
         run: npm ci
       - name: Build assets and run tests
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
-        run: npm run prod; php artisan key:generate --force -n; php artisan test;
+        run: npm run prod; php artisan key:generate --force -n; cat .env; php artisan test;
       - name: Deploy build
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
         uses: ionos-deploy-now/deploy-to-ionos-action@v1
