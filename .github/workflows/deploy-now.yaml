@@ -32,7 +32,7 @@ jobs:
           node-version: 14.x
       - name: Render templates
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
-        uses: ionos-deploy-now/template-renderer-action@main
+        uses: ionos-deploy-now/template-renderer-action@feature/improvements
         with:
           secrets: |
             appUrl: ${{ steps.project.outputs.site-url }}
