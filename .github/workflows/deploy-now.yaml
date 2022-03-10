@@ -30,33 +30,25 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
-      - name: Make envfile
+      - name: Render templates
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
-        uses: fmunirdev/envvar-to-dotenv-action@v0.2.0
+        uses: ionos-deploy-now/template-renderer-action@main
         with:
-          target: .env
-          variableNames: APP_NAME,APP_ENV,APP_KEY,APP_DEBUG,APP_URL,LOG_CHANNEL,LOG_LEVEL,DB_CONNECTION,DATABASE_URL,BROADCAST_DRIVER,CACHE_DRIVER,FILESYSTEM_DRIVER,QUEUE_CONNECTION,SESSION_DRIVER,SESSION_LIFETIME
-        env:
-          APP_DEBUG: true
-          APP_ENV: local
-          APP_NAME: Laravel
-          APP_URL: ${{ steps.project.outputs.site-url }}
-          BROADCAST_DRIVER: log
-          CACHE_DRIVER: file
-          DATABASE_URL: /storage/database.sqlite
-          DB_CONNECTION: sqlite
-          FILESYSTEM_DRIVER: local
-          LOG_CHANNEL: stack
-          LOG_LEVEL: debug
-          QUEUE_CONNECTION: sync
-          SESSION_DRIVER: file
-          SESSION_LIFETIME: 120
+          secrets: |
+            appUrl: ${{ steps.project.outputs.site-url }}
+            mail:
+              host: ${{ secrets.IONOS_MAIL_HOST }}
+              port: ${{ secrets.IONOS_MAIL_PORT }}
+              user: ${{ secrets.IONOS_MAIL_USERNAME }}
+              password: ${{ secrets.IONOS_MAIL_PASSWORD }}
+              encryption: ${{ secrets.IONOS_MAIL_ENCRYPTION }}
+              fromAddress: ${{ secrets.IONOS_MAIL_FROM_ADDRESS }}
       - name: Prepare project environment
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
         run: npm ci
       - name: Build assets and run tests
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
-        run: npm run prod; php artisan key:generate --force -n; cat .env; php artisan test;
+        run: npm run prod; php artisan key:generate --force -n; php artisan test;
       - name: Deploy build
         if: ${{ steps.project.outputs.deployment-enabled == 'true' }}
         uses: ionos-deploy-now/deploy-to-ionos-action@v1
